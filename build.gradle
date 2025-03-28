@@ -1,6 +1,18 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.apache.tools.ant.filters.FixCrLfFilter
 
+buildscript {
+    repositories {
+        mavenLocal()      // Kho cục bộ để tìm http-builder đã cài thủ công
+        mavenCentral()    // Kho chính thức
+        jcenter()         // Kho cũ, cần cho các phụ thuộc cũ như http-builder
+    }
+    dependencies {
+        // Ví dụ: Nếu có plugin Bintray hoặc các plugin khác
+        // classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+    }
+}
+
 plugins {
     id 'application'
     id 'maven-publish'
@@ -54,6 +66,7 @@ sourceSets {
 }
 
 repositories {
+    mavenLocal()
     jcenter()
     maven {
         url 'http://dl.bintray.com/omegat-org/maven'
@@ -833,6 +846,20 @@ task publishManual {
                 }
             }
         }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.omegat'           // Group ID cho artifact
+            artifactId = 'omegat'            // Artifact ID
+            version = '4.1.4'                // Phiên bản
+            from components.java            // Lấy từ thành phần Java (JAR)
+        }
+    }
+    repositories {
+        mavenLocal()                        // Xuất bản vào ~/.m2/repository
     }
 }
 
