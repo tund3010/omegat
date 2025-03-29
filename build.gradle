@@ -222,6 +222,14 @@ jar {
     archiveName = "${jar.baseName}.${jar.extension}"
 }
 
+// Tác vụ để tạo omegat-4.1.4-tests.jar
+task testJar(type: Jar) {
+    baseName = 'omegat'
+    version = '4.1.4'
+    classifier = 'tests'
+    from sourceSets.test.output
+}
+
 ext {
     assetDir = findProperty('assetDir') ?: '../'
 
@@ -856,6 +864,12 @@ publishing {
             artifactId = 'omegat'            // Artifact ID
             version = '4.1.4'                // Phiên bản
             from components.java            // Lấy từ thành phần Java (JAR)
+        }
+        testJarPublication(MavenPublication) {
+            groupId = 'org.omegat'
+            artifactId = 'omegat'
+            version = '4.1.4'
+            artifact tasks.testJar
         }
     }
     repositories {
